@@ -32,6 +32,37 @@ app.get("/jugadores", (req, res) => {
   }
 });
 
+// buscar jugador por id
+app.get("/jugadores/:id", (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const jugador = jugadores.find(j => j.id === id);
+    if (!jugador) {
+      return res.status(404).json({ error: "jugador no encontrado" });
+    }
+    res.status(200).json(jugador);
+  } catch (error) {
+    res.status(500).json({ error: "algo salio mal" });
+  }
+});
+
+// buscar jugador por nombre usando query param
+app.get("/jugadores/buscar/nombre", (req, res) => {
+  try {
+    if (!req.query.nombre) {
+      return res.status(400).json({ error: "tienes que indicar un nombre" });
+    }
+    const nombre = req.query.nombre.toLowerCase();
+    const resultado = jugadores.filter(j => j.nombre.toLowerCase().includes(nombre));
+    if (resultado.length === 0) {
+      return res.status(404).json({ error: "no se encontro ningun jugador con ese nombre" });
+    }
+    res.status(200).json({ total: resultado.length, jugadores: resultado });
+  } catch (error) {
+    res.status(500).json({ error: "algo salio mal" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor arrancado en http://localhost:${PORT}`);
 });
