@@ -63,6 +63,64 @@ app.get("/jugadores/buscar/nombre", (req, res) => {
   }
 });
 
+// crear un jugador nuevo
+app.post("/jugadores", (req, res) => {
+  try {
+    const { nombre, posicion, dorsal, nacionalidad, edad, valor_mercado, goles_temporada, activo } = req.body;
+
+    if (!nombre || !posicion || !dorsal || !nacionalidad || edad === undefined || valor_mercado === undefined) {
+      return res.status(400).json({ error: "faltan campos obligatorios: nombre, posicion, dorsal, nacionalidad, edad, valor_mercado" });
+    }
+
+    const nuevoJugador = {
+      id: jugadores.length + 1,
+      nombre,
+      posicion,
+      dorsal,
+      nacionalidad,
+      edad,
+      valor_mercado,
+      goles_temporada: goles_temporada ?? 0,
+      activo: activo ?? true,
+    };
+
+    jugadores.push(nuevoJugador);
+    res.status(201).json({ mensaje: "jugador creado correctamente", jugador: nuevoJugador });
+  } catch (error) {
+    res.status(500).json({ error: "algo salio mal" });
+  }
+});
+
+// modificar un jugador
+app.put("/jugadores/:id", (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const index = jugadores.findIndex(j => j.id === id);
+    if (index === -1) {
+      return res.status(404).json({ error: "jugador no encontrado" });
+    }
+    jugadores[index] = { ...jugadores[index], ...req.body, id };
+    res.status(200).json({ mensaje: "jugador modificado correctamente", jugador: jugadores[index] });
+  } catch (error) {
+    res.status(500).json({ error: "algo salio mal" });
+  }
+});
+
+// eliminar un jugador
+app.delete("/jugadores/:id", (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const index = jugadores.findIndex(j => j.id === id);
+    if (index === -1) {
+      return res.status(404).json({ error: "jugador no encontrado" });
+    }
+    const eliminado = jugadores.splice(index, 1)[0];
+    res.status(200).json({ mensaje: "jugador eliminado correctamente", jugador: eliminado });
+  } catch (error) {
+    res.status(500).json({ error: "algo salio mal" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor arrancado en http://localhost:${PORT}`);
 });
