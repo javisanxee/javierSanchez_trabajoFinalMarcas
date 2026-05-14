@@ -1,0 +1,15 @@
+info:
+  name: modificar jugador
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: http://localhost:3000/jugadores/7
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

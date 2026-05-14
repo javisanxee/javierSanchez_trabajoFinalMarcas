@@ -1,0 +1,25 @@
+info:
+  name: top jugadores
+  type: http
+  seq: 13
+
+http:
+  method: GET
+  url: http://localhost:3000/estadisticas/top?campo=goles_temporada&n=3&orden=desc
+  params:
+    - name: campo
+      value: goles_temporada
+      type: query
+    - name: n
+      value: "3"
+      type: query
+    - name: orden
+      value: desc
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
